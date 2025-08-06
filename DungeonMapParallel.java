@@ -1,6 +1,9 @@
 
 /**
- * DungeonMap.java
+ * DungeonMapParallel.java
+ * @version Parallel Solution
+ * Most of the code is the same as DungeonMap.java, except for the parts
+ * where parallelism was implemented (the visualisePowerMap method)
  *
  * Represents the dungeon terrain for the Dungeon Hunter assignment.
  *Methods to compute  power (mana) values in the dungeon grid,
@@ -15,6 +18,7 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
@@ -130,19 +134,19 @@ public class DungeonMapParallel {
      * @param y_coord The y-coordinate in the dungeon grid.
      * @return the direction of highest mana.
      */
-	Hunt.Direction getNextStepDirection(int x, int y) {
-		Hunt.Direction climbDirection = Hunt.Direction.STAY;
+	HuntParallel.Direction getNextStepDirection(int x, int y) {
+		HuntParallel.Direction climbDirection = HuntParallel.Direction.STAY;
 	    int localMax = getManaLevel(x, y);
 
-	    final Hunt.Direction[] directions = {
-	        Hunt.Direction.LEFT,
-	        Hunt.Direction.RIGHT,
-	        Hunt.Direction.UP,
-	        Hunt.Direction.DOWN,
-	        Hunt.Direction.UP_LEFT,
-	        Hunt.Direction.UP_RIGHT,
-	        Hunt.Direction.DOWN_LEFT,
-	        Hunt.Direction.DOWN_RIGHT
+	    final HuntParallel.Direction[] directions = {
+	        HuntParallel.Direction.LEFT,
+	        HuntParallel.Direction.RIGHT,
+	        HuntParallel.Direction.UP,
+	        HuntParallel.Direction.DOWN,
+	        HuntParallel.Direction.UP_LEFT,
+	        HuntParallel.Direction.UP_RIGHT,
+	        HuntParallel.Direction.DOWN_LEFT,
+	        HuntParallel.Direction.DOWN_RIGHT
 	    };
 
 	    for (int i = 0; i < dx.length; i++) {
@@ -198,7 +202,7 @@ public class DungeonMapParallel {
 	        File output = new File(filename);
 	        ImageIO.write(image, "png", output);
 	        System.out.println("map saved to " + filename);
-	    } catch (Exception e) {
+	    } catch (IOException | NullPointerException e) {
 	        e.printStackTrace();
 	    }
 	}
@@ -253,6 +257,16 @@ public class DungeonMapParallel {
 
 	public int getColumns() {
 		return columns;
+	}
+
+	/**
+	 * Checks if the given row and column lie within the dimensions of the dungeon grid.
+	 * @param row
+	 * @param col
+	 * @return true if both the row and col lie within the dimensions of the dungeon grid and false otherwise.
+	 */
+	public boolean inBounds(int row, int col) {
+		return row >= 0 && row < rows && col >= 0 && col < columns;
 	}
 
 	/**
