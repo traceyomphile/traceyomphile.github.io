@@ -15,6 +15,7 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
@@ -37,37 +38,6 @@ public class DungeonMapParallel {
     private double bossX;
     private double bossY;
     private double decayFactor;
-    
-    private class TerrainInitTask extends RecursiveAction  {
-        private static final int THRESHOLD = 50;    //  sequential cut-off, choose correctly later.
-        private final int startRow, endRow;
-
-        public TerrainInitTask(int startRow, int endRow) {
-            this.startRow = startRow;
-            this.endRow = endRow;
-        }
-
-        @Override
-        protected void compute() {
-            if (endRow - startRow < THRESHOLD) {
-                for (int i = startRow; i < endRow; i++) {
-                    for (int j = 0; j < columns; j++) {
-                        manaMap[i][j] = Integer.MIN_VALUE;
-                        visit[i][j] = -1;
-                    }
-                }
-            } else {
-                int mid = (startRow + endRow) / 2;
-                TerrainInitTask left = new TerrainInitTask(startRow, mid);
-                TerrainInitTask right = new TerrainInitTask(mid, endRow);
-                left.fork();
-                right.compute();
-                left.join();
-            }
-        }
-
-        
-    }
 
     //constructor
 	public DungeonMapParallel(	double xmin, double xmax, 
@@ -97,9 +67,10 @@ public class DungeonMapParallel {
 		dungeonGridPointsEvaluated=0;
 
 		/* Terrain initialization */
-		ForkJoinPool pool = ForkJoinPool.commonPool();
-        pool.invoke(new TerrainInitTask(0, rows));
-        pool.shutdown();    // remove later if not mentioned anywhere in the slides.
+		for (int i = 0; i < rows; i++) {
+			Arrays.fill(manaMap[i], Integer.MIN_VALUE);
+			Arrays.fill(visit[i], -1);
+		}
 	}
 
 	// has this site been visited before?
@@ -190,50 +161,6 @@ public class DungeonMapParallel {
 	    }
 	    return climbDirection;
 	}
-
-    private class VisualisePowerTask extends RecursiveAction {
-        private static final int THRESHOLD = 50;
-        private final int startX, endX, min;
-        private final BufferedImage image;
-        private final double range;
-        private final boolean path;
-
-        public VisualisePowerTask(int startX, int endX, BufferedImage image, int min, double range, boolean path) {
-            this.startX = startX;
-            this.endX = endX;
-            this.image = image;
-            this.min = min;
-            this.range = range;
-            this.path = path;
-        }
-
-        @Override
-        protected void compute() {
-            if (endX - startX < THRESHOLD) {
-                for (int x = startX; x < endX; x++) {
-                    for (int y = 0; y < image.getHeight(); y++) {
-                        Color color;
-                        if (path && !visited(x, y)) {
-                            color = Color.BLACK;
-                        } else if (manaMap[x][y] == Integer.MIN_VALUE) {
-                            color = Color.BLACK;
-                        } else {
-                            double normalized = (manaMap[x][y] - min) / range;
-                            color = mapHeightToColor(normalized);
-                        }
-                        image.setRGB(x, image.getHeight()  - 1 - y, color.getRGB());
-                    }
-                }
-            } else {
-                int mid = (startX + endX) / 2;
-                VisualisePowerTask left = new VisualisePowerTask(startX, mid, image, min, range, path);
-                VisualisePowerTask right = new VisualisePowerTask(mid, endX, image, min, range, path);
-                left.fork();
-                right.compute();
-                left.join();
-            }
-        }
-    }
 
 	/**
      * Generates an image from the dungeon grid.
@@ -327,4 +254,54 @@ public class DungeonMapParallel {
 	public int getColumns() {
 		return columns;
 	}
+
+	/**
+	 * The VisualisePowerTask class sets the RGB color for the output image concurrently by using the ForkJoinPool framework
+	 * Uses a Sequential-cutoff of 
+	 * @author Tracey Letlape
+	 * 
+	 */
+	private class VisualisePowerTask extends RecursiveAction {
+        private static final int THRESHOLD = 50;
+        private final int startX, endX, min;
+        private final BufferedImage image;
+        private final double range;
+        private final boolean path;
+
+        public VisualisePowerTask(int startX, int endX, BufferedImage image, int min, double range, boolean path) {
+            this.startX = startX;
+            this.endX = endX;
+            this.image = image;
+            this.min = min;
+            this.range = range;
+            this.path = path;
+        }
+
+        @Override
+        protected void compute() {
+            if (endX - startX < THRESHOLD) {
+                for (int x = startX; x < endX; x++) {
+                    for (int y = 0; y < image.getHeight(); y++) {
+                        Color color;
+                        if (path && !visited(x, y)) {
+                            color = Color.BLACK;
+                        } else if (manaMap[x][y] == Integer.MIN_VALUE) {
+                            color = Color.BLACK;
+                        } else {
+                            double normalized = (manaMap[x][y] - min) / range;
+                            color = mapHeightToColor(normalized);
+                        }
+                        image.setRGB(x, image.getHeight()  - 1 - y, color.getRGB());
+                    }
+                }
+            } else {
+                int mid = (startX + endX) / 2;
+                VisualisePowerTask left = new VisualisePowerTask(startX, mid, image, min, range, path);
+                VisualisePowerTask right = new VisualisePowerTask(mid, endX, image, min, range, path);
+                left.fork();
+                right.compute();
+                left.join();
+            }
+        }
+    }
 }
