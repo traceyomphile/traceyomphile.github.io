@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-
 /**
  * HuntParallel.java
  * @version Parallel solution
@@ -44,6 +43,8 @@ public class HuntParallel {
 
 	/**
 	 * Find the local maximum mana from an initial starting point
+	 * Uses the ExecutorService interface to check neighbouring directions all at once.
+	 * Uses a List to store all tasks and another list to store their results.
 	 * 
 	 * @return the highest power/mana located
 	 */
@@ -53,7 +54,6 @@ public class HuntParallel {
 
 		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-		
 		while(!dungeon.visited(posRow, posCol)) { // stop when hit existing path
 			power=dungeon.getManaLevel(posRow, posCol);
 			dungeon.setVisited(posRow, posCol, id);
@@ -128,15 +128,37 @@ public class HuntParallel {
 		return power;
 	}
 
+	/**
+	 * Creates an object that stores the direction to be taken,
+	 * its position in the grid via row & col,
+	 * and the mana at that position.
+	 * 
+	 * @author Tracey Letlape
+	 */
 	private static class DirectionPower {
 		private Direction direction;
 		private int mana, row, col;
 
+		/**
+		 * When position doesn't matter
+		 * usually when the direction will not change the current position of the hunter in the grid.
+		 * @param direction
+		 * @param mana
+		 */
 		public DirectionPower(Direction direction, int mana) {
 			this.direction = direction;
 			this.mana = mana;
 		}
 
+		/**
+		 * When position matters, 
+		 * usually when direction will change the current position of the hunter in the grid.
+		 * 
+		 * @param direction	// the direction taken by the hunter
+		 * @param mana	// the mana at the new position 
+		 * @param row	// the row position of the hunter in the grid after a step is taken in the given direction.
+		 * @param col	// the column position of the hunter in the grid after a step is taken in the given direction.
+		 */
 		public DirectionPower(Direction direction, int mana, int row, int col) {
 			this.direction = direction;
 			this.mana = mana;
@@ -145,8 +167,16 @@ public class HuntParallel {
 		}
 	}
 
+	/**
+	 * Gtes the directionPower object resulting from the step the hunter took from where they currently are in the grid
+	 * 
+	 * @param direction	// direction taken by the hunter
+	 * @param row	// the new row position of the hunter in the grid after a step is taken in the given direction
+	 * @param col	// the new column position of the hunter in the grid after a step is taken in the given direction.
+	 * @return
+	 */
 	private DirectionPower getDirectionPower(Direction direction, int row, int col) {
-		if (!dungeon.inBounds(row, col)) return new DirectionPower(direction, dungeon.getManaLevel(row, col), row, col);
+		if (!dungeon.inBounds(row, col)) return new DirectionPower(direction, Integer.MIN_VALUE, row, col);
 		return new DirectionPower(direction, dungeon.getManaLevel(row, col), row, col);
 	}
 
@@ -159,5 +189,4 @@ public class HuntParallel {
 	public int getSteps() { return steps;}
 
 	public boolean isStopped() {return stopped;}
-
 }
