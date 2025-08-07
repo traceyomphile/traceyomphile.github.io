@@ -30,18 +30,19 @@ public class DungeonMapParallel {
 	public static final int PRECISION = 10000;
 	public static final int RESOLUTION = 5;
 
-    // Declare these to make the program more faster
+    // Shared dx and dy objects to avoid reinitialization everytime the method is called.
+	// Rember to change later if automarker does not expect extra fields.
     public static final int[] dx = {-1, 1, 0, 0, -1, 1, -1, 1};
     public static final int[] dy  = {0, 0, -1, 1, -1, -1, 1, 1};
 
-	private int rows, columns; //dungeonGrid size
-	private double xmin, xmax, ymin, ymax; //x and y dungeon limits
-	private int [][] manaMap;
-	private int [][] visit;
+	private final int rows, columns; //dungeonGrid size
+	private final double xmin, xmax, ymin, ymax; //x and y dungeon limits
+	private final int [][] manaMap;
+	private final int [][] visit;
 	private int dungeonGridPointsEvaluated;
-    private double bossX;
-    private double bossY;
-    private double decayFactor;
+    private final double bossX;
+    private final double bossY;
+    private final double decayFactor;
 
     //constructor
 	public DungeonMapParallel(	double xmin, double xmax, 
@@ -195,7 +196,7 @@ public class DungeonMapParallel {
 	    double range = (max > min) ? (max - min) : 1.0;
 
 	    // Map height values to colors
-	    ForkJoinPool pool = ForkJoinPool.commonPool();
+	    ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         pool.invoke(new VisualisePowerTask(0, width, image, min, range, path));
         pool.shutdown();    // remember to check whether or not we must remove this pat.
 	    try {
