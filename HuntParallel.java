@@ -1,26 +1,19 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 /**
  * HuntParallel.java
  * @version Parallel solution
- * Most of the code is the same as the code in Hunt.java, except for the parts where parallelism was implemented.
+ * 
+ * Most of the code is the same as the code in Hunt.java, except for some variable types.
  * Represents a search in the grid of a DungeonMap to identify the local maximum from a start point.
  *
  *
  *M. Kuttel 2025
  */
-public class HuntParallel {
-	private int id;						//  identifier for this hunt
+public class HuntParallel{
+	private final int id;						//  identifier for this hunt
 	private int posRow, posCol;		// Position in the dungeonMap
 	private int steps; 				//number of steps to end of the search
 	private boolean stopped;	// Did the search hit a previously searched location?
-	private DungeonMapParallel dungeon;
+	private final DungeonMapParallel dungeon;
 	public enum Direction {
 		STAY,
 		LEFT,
@@ -50,49 +43,16 @@ public class HuntParallel {
 	 */
 	public int findManaPeak() {
 		int power=Integer.MIN_VALUE;
-		Direction next = Direction.STAY;
-
-		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
+		Direction next;
+		
 		while(!dungeon.visited(posRow, posCol)) { // stop when hit existing path
 			power=dungeon.getManaLevel(posRow, posCol);
 			dungeon.setVisited(posRow, posCol, id);
 			steps++;
-
-			// Build list of directions and their deltas
-			List<Callable<DirectionPower>> tasks = Arrays.asList(
-				() -> getDirectionPower(HuntParallel.Direction.LEFT, posRow - 1, posCol),
-				() -> getDirectionPower(HuntParallel.Direction.RIGHT, posRow + 1, posCol),
-				() -> getDirectionPower(HuntParallel.Direction.UP, posRow, posCol - 1),
-				() -> getDirectionPower(HuntParallel.Direction.DOWN, posRow, posCol + 1),
-				() -> getDirectionPower(HuntParallel.Direction.UP_LEFT, posRow - 1, posCol - 1),
-				() -> getDirectionPower(HuntParallel.Direction.UP_RIGHT, posRow + 1, posCol - 1),
-				() -> getDirectionPower(HuntParallel.Direction.DOWN_LEFT, posRow - 1, posCol + 1),
-				() -> getDirectionPower(HuntParallel.Direction.DOWN_RIGHT, posRow + 1, posCol + 1)
-			);
-
-			try {
-				List<Future<DirectionPower>> results = executor.invokeAll(tasks);
-
-				DirectionPower best = new DirectionPower(HuntParallel.Direction.STAY, power);
-				for (Future<DirectionPower> f : results) {
-					DirectionPower dp = f.get();
-					if (dp.mana > best.mana && !dungeon.visited(dp.row, dp.col)) {
-						best = dp;
-					}
-				}
-
-				next = best.direction;
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-				break;
-			}
-
+			next = dungeon.getNextStepDirection(posRow, posCol);
 			if(DungeonHunter.DEBUG) System.out.println("Shadow "+getID()+" moving  "+next);
 			switch(next) {
-				case STAY: 
-					executor.shutdown();	// remove later if mentioned nowhere in the slides.
-					return power; //found local valley
+				case STAY: return power; //found local valley
 				case LEFT:
 					posRow--;
 					break;
@@ -122,62 +82,8 @@ public class HuntParallel {
 					posRow=posRow+1;
 			}
 		}
-
-		executor.shutdown();
 		stopped=true;
 		return power;
-	}
-
-	/**
-	 * Creates an object that stores the direction to be taken,
-	 * its position in the grid via row & col,
-	 * and the mana at that position.
-	 * 
-	 * @author Tracey Letlape
-	 */
-	private static class DirectionPower {
-		private Direction direction;
-		private int mana, row, col;
-
-		/**
-		 * When position doesn't matter
-		 * usually when the direction will not change the current position of the hunter in the grid.
-		 * @param direction
-		 * @param mana
-		 */
-		public DirectionPower(Direction direction, int mana) {
-			this.direction = direction;
-			this.mana = mana;
-		}
-
-		/**
-		 * When position matters, 
-		 * usually when direction will change the current position of the hunter in the grid.
-		 * 
-		 * @param direction	// the direction taken by the hunter
-		 * @param mana	// the mana at the new position 
-		 * @param row	// the row position of the hunter in the grid after a step is taken in the given direction.
-		 * @param col	// the column position of the hunter in the grid after a step is taken in the given direction.
-		 */
-		public DirectionPower(Direction direction, int mana, int row, int col) {
-			this.direction = direction;
-			this.mana = mana;
-			this.row = row;
-			this.col = col;
-		}
-	}
-
-	/**
-	 * Gtes the directionPower object resulting from the step the hunter took from where they currently are in the grid
-	 * 
-	 * @param direction	// direction taken by the hunter
-	 * @param row	// the new row position of the hunter in the grid after a step is taken in the given direction
-	 * @param col	// the new column position of the hunter in the grid after a step is taken in the given direction.
-	 * @return
-	 */
-	private DirectionPower getDirectionPower(Direction direction, int row, int col) {
-		if (!dungeon.inBounds(row, col)) return new DirectionPower(direction, Integer.MIN_VALUE, row, col);
-		return new DirectionPower(direction, dungeon.getManaLevel(row, col), row, col);
 	}
 
 	public int getID() { return id; }
