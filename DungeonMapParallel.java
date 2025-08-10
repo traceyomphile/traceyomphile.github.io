@@ -11,7 +11,7 @@
  * to visualise the power of visited cells .
  *
  *
- * Michelle Kuttel
+ * Michelle Kuttel, parallelized by Tracey Letlape
  * 2025
  */
 

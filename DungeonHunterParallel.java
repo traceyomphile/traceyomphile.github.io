@@ -9,6 +9,7 @@
 /**
  * DungeonHunterParallel.java
  * @version Parallel solution
+ * Parallelization by Tracey Letlape
  *
  * Main driver for the Dungeon Hunter assignment.
  * This program initializes the dungeon map and performs a series of searches

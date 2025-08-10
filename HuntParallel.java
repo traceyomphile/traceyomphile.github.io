@@ -6,7 +6,7 @@
  * Represents a search in the grid of a DungeonMap to identify the local maximum from a start point.
  *
  *
- *M. Kuttel 2025
+ *M. Kuttel 2025, parallelized by Tracey Letlape
  */
 public class HuntParallel{
 	private final int id;						//  identifier for this hunt
