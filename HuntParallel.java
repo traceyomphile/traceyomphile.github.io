@@ -50,7 +50,7 @@ public class HuntParallel{
 			dungeon.setVisited(posRow, posCol, id);
 			steps++;
 			next = dungeon.getNextStepDirection(posRow, posCol);
-			if(DungeonHunter.DEBUG) System.out.println("Shadow "+getID()+" moving  "+next);
+			if(DungeonHunterParallel.DEBUG) System.out.println("Shadow "+getID()+" moving  "+next);
 			switch(next) {
 				case STAY: return power; //found local valley
 				case LEFT:
@@ -74,7 +74,7 @@ public class HuntParallel{
 					posRow=posRow+1;
 					break;
 				case DOWN_LEFT:
-					posRow=posRow+1;
+					posCol=posCol+1;
 					posRow--;
 					break;
 				case DOWN_RIGHT:

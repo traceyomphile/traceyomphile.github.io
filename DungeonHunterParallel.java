@@ -87,18 +87,18 @@ public class DungeonHunterParallel {
             searches[i] = new HuntParallel(i+1, rand.nextInt(dungeonRows),
             rand.nextInt(dungeonColumns), dungeon);
         }
-        
+
     	tick();  //start timer
         ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         // Prepare tasks
         SearchResult result = forkJoinPool.invoke(new HuntTask(searches, 0, numSearches));
-
-   		tock(); //end timer
         forkJoinPool.shutdown();
 
         int max = result.maxMana;
         int finder = result.finderIndex;
-   		
+
+   		tock(); //end timer
+        
 		System.out.printf("\t dungeon size: %d,\n", gateSize);
 		System.out.printf("\t rows: %d, columns: %d\n", dungeonRows, dungeonColumns);
 		System.out.printf("\t x: [%f, %f], y: [%f, %f]\n", xmin, xmax, ymin, ymax );
