@@ -43,7 +43,7 @@ public class DungeonHunterParallel {
                                             // the grid is square so if gateSize = 1, then grid is 10x10	
     	HuntParallel [] searches;		// Array of searches
   
-    	//Random rand = new Random();  //the random number generator
+    	Random rand = new Random();  //the random number generator
       	int randomSeed=0;  //set seed to have predictability for testing
         
     	if (args.length!=3) {
@@ -54,15 +54,15 @@ public class DungeonHunterParallel {
     	
     	/* Read argument values */
       	try {
-    	gateSize=Integer.parseInt( args[0] );
-    	 if (gateSize <= 0) {
+    	    gateSize=Integer.parseInt( args[0] );
+    	    if (gateSize <= 0) {
              throw new IllegalArgumentException("Grid size must be greater than 0.");
-         }
+            }
     	
-    	numSearches = (int) (Double.parseDouble(args[1])*(gateSize*2)*(gateSize*2)*DungeonMap.RESOLUTION);
+    	    numSearches = (int) (Double.parseDouble(args[1])*(gateSize*2)*(gateSize*2)*DungeonMapParallel.RESOLUTION);
     	
-    	randomSeed=Integer.parseInt( args[2] );
-        if (randomSeed < 0) {
+    	    randomSeed=Integer.parseInt( args[2] );
+            if (randomSeed < 0) {
                 throw new IllegalArgumentException("Random seed must be non-negative.");
             }
         } catch (NumberFormatException e) {
@@ -83,19 +83,13 @@ public class DungeonHunterParallel {
     	int dungeonColumns=dungeon.getColumns();
      	searches= new HuntParallel[numSearches];
 
-        Random[] randPool = new Random[numSearches];
         for (int i = 0; i < numSearches; i++) {
-            randPool[i] = new Random(randomSeed + i);
+            searches[i] = new HuntParallel(i+1, rand.nextInt(dungeonRows),
+            rand.nextInt(dungeonColumns), dungeon);
         }
-    	for (int i=0;i<numSearches;i++)  //intialize searches at random locations in dungeon using the ThreadLocalRandom
-    		searches[i]=new HuntParallel(i+1, randPool[i].nextInt(dungeonRows),
-    				randPool[i].nextInt(dungeonColumns),dungeon);
-    	
-
-        ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         
     	tick();  //start timer
-
+        ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         // Prepare tasks
         SearchResult result = forkJoinPool.invoke(new HuntTask(searches, 0, numSearches));
 
@@ -118,8 +112,8 @@ public class DungeonHunterParallel {
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		dungeon.visualisePowerMap("visualiseSearch.png", false);
-		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		dungeon.visualisePowerMap("visualiseSearchParallel.png", false);
+		dungeon.visualisePowerMap("visualiseSearchPathParallel.png", true);
     }
 
     /**
