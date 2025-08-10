@@ -32,8 +32,8 @@ public class DungeonMapParallel {
 
     // Shared dx and dy objects to avoid reinitialization everytime the method is called.
 	// Rember to change later if automarker does not expect extra fields.
-    public static final int[] dx = {-1, 1, 0, 0, -1, 1, -1, 1};
-    public static final int[] dy  = {0, 0, -1, 1, -1, -1, 1, 1};
+    public static final int[] dirX = {-1, 1, 0, 0, -1, 1, -1, 1};
+    public static final int[] dirY  = {0, 0, -1, 1, -1, -1, 1, 1};
 
 	private final int rows, columns; //dungeonGrid size
 	private final double xmin, xmax, ymin, ymax; //x and y dungeon limits
@@ -64,14 +64,14 @@ public class DungeonMapParallel {
         double xRange = xmax - xmin;
         this.bossX = xmin + (xRange) * rand.nextDouble();
         this.bossY = ymin + (ymax - ymin) * rand.nextDouble();
-     // Calculate decay factor based on range
+     	// Calculate decay factor based on range
         this.decayFactor = 2.0 / (xRange * 0.1);  // adjust scaling factor to control width
 
 		manaMap = new int[rows][columns];
 		visit = new int[rows][columns];
 		dungeonGridPointsEvaluated=0;
 
-		/* Terrain initialization */
+		/* Terrain initialization, uses Arrays.fill */
 		for (int i = 0; i < rows; i++) {
 			Arrays.fill(manaMap[i], Integer.MIN_VALUE);
 			Arrays.fill(visit[i], -1);
@@ -79,15 +79,14 @@ public class DungeonMapParallel {
 	}
 
 	// has this site been visited before?
-	 boolean visited( int x, int y) {
-		 if (visit[x][y]==-1) return false;
-		 return true;
-}
+	boolean visited( int x, int y) {
+		 return visit[x][y] != -1;
+	}
 
-	 void setVisited( int x, int y, int id) {
+	void setVisited( int x, int y, int id) {
 		 if (visit[x][y]==-1) //don't reset
 			 visit[x][y]= id;
-	 }
+	}
 
 	 /**
 	     * Evaluates mana at a dungeonGrid  coordinate (x, y) in the dungeon,
@@ -99,7 +98,8 @@ public class DungeonMapParallel {
 	     */
 	int getManaLevel( int x, int y) {
 		if (visited(x,y)) return manaMap[x][y];  //don't recalculate 
-
+		if (manaMap[x][y]>Integer.MIN_VALUE) return manaMap[x][y];
+		
 		/* Calculate the coordinates of the point in the ranges */
 		double x_coord = xmin + ( (xmax - xmin) / rows ) * x;
 		double y_coord = ymin + ( (ymax - ymin) / columns ) * y;
@@ -150,9 +150,9 @@ public class DungeonMapParallel {
 	        HuntParallel.Direction.DOWN_RIGHT
 	    };
 
-	    for (int i = 0; i < dx.length; i++) {
-	        int newX = x + dx[i];
-	        int newY = y + dy[i];
+	    for (int i = 0; i < dirX.length; i++) {
+	        int newX = x + dirX[i];
+	        int newY = y + dirY[i];
 
             if (newX < 0 || newX >= rows || newY < 0 ||newY >= columns) continue;
 
@@ -195,11 +195,12 @@ public class DungeonMapParallel {
 	    // Prevent division by zero if everything has the same value
 	    double range = (max > min) ? (max - min) : 1.0;
 
-	    // Map height values to colors
-	    ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
-        pool.invoke(new VisualisePowerTask(0, width, image, min, range, path));
-        pool.shutdown();    // remember to check whether or not we must remove this pat.
-	    try {
+	    try (// Map height values to colors
+		ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors())) {
+			pool.invoke(new VisualisePowerTask(0, width, image, min, range, path));
+			pool.shutdown();    // remember to check whether or not we must remove this part.
+		}
+        try {
 	        File output = new File(filename);
 	        ImageIO.write(image, "png", output);
 	        System.out.println("map saved to " + filename);
@@ -214,7 +215,7 @@ public class DungeonMapParallel {
 	private Color mapHeightToColor(double normalized) {
 	    normalized = Math.max(0, Math.min(1, normalized)); // clamp to [0,1]
 
-	    int r = 0, g = 0, b = 0;
+	    int r, g, b;
 
 	    if (normalized < 0.33) {
 	        // Black -> Purple
@@ -261,18 +262,8 @@ public class DungeonMapParallel {
 	}
 
 	/**
-	 * Checks if the given row and column lie within the dimensions of the dungeon grid.
-	 * @param row
-	 * @param col
-	 * @return true if both the row and col lie within the dimensions of the dungeon grid and false otherwise.
-	 */
-	public boolean inBounds(int row, int col) {
-		return row >= 0 && row < rows && col >= 0 && col < columns;
-	}
-
-	/**
 	 * The VisualisePowerTask class sets the RGB color for the output image concurrently by using the ForkJoinPool framework
-	 * Uses a Sequential-cutoff of 
+	 * Uses a Sequential-cutoff of 50
 	 * @author Tracey Letlape
 	 * 
 	 */
