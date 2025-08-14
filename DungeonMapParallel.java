@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.imageio.ImageIO;
 
 public class DungeonMapParallel {
@@ -39,7 +40,7 @@ public class DungeonMapParallel {
 	private final double xmin, xmax, ymin, ymax; //x and y dungeon limits
 	private final int [][] manaMap;
 	private final int [][] visit;
-	private int dungeonGridPointsEvaluated;
+	private final AtomicInteger dungeonGridPointsEvaluated;
     private final double bossX;
     private final double bossY;
     private final double decayFactor;
@@ -69,7 +70,7 @@ public class DungeonMapParallel {
 
 		manaMap = new int[rows][columns];
 		visit = new int[rows][columns];
-		dungeonGridPointsEvaluated=0;
+		dungeonGridPointsEvaluated = new AtomicInteger(0);
 
 		/* Terrain initialization, uses Arrays.fill */
 		for (int i = 0; i < rows; i++) {
@@ -84,8 +85,8 @@ public class DungeonMapParallel {
 	}
 
 	void setVisited( int x, int y, int id) {
-		 if (visit[x][y]==-1) //don't reset
-			 visit[x][y]= id;
+		if (visit[x][y]==-1) //don't reset
+			visit[x][y]= id;
 	}
 
 	 /**
@@ -124,7 +125,7 @@ public class DungeonMapParallel {
 		/* Transform to fixed point precision */
 		int fixedPoint = (int)( PRECISION * mana );
 		manaMap[x][y]=fixedPoint;
-		dungeonGridPointsEvaluated++;//keep count
+		dungeonGridPointsEvaluated.incrementAndGet();//keep count
 		return fixedPoint;
 	}
 
@@ -195,11 +196,9 @@ public class DungeonMapParallel {
 	    // Prevent division by zero if everything has the same value
 	    double range = (max > min) ? (max - min) : 1.0;
 
-	    try (// Map height values to colors
-		ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors())) {
-			pool.invoke(new VisualisePowerTask(0, width, image, min, range, path));
-			pool.shutdown();    // remember to check whether or not we must remove this part.
-		}
+	    // Map height values to colors
+		ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
+		pool.invoke(new VisualisePowerTask(0, width, image, min, range, path));
         try {
 	        File output = new File(filename);
 	        ImageIO.write(image, "png", output);
@@ -243,7 +242,7 @@ public class DungeonMapParallel {
 	}
 
 	public int getGridPointsEvaluated() {
-		return dungeonGridPointsEvaluated;
+		return dungeonGridPointsEvaluated.get();
 	}
 
 	public double getXcoord(int x) {

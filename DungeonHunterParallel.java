@@ -33,6 +33,7 @@ public class DungeonHunterParallel {
 	static long endTime = 0;
 	private static void tick() {startTime = System.currentTimeMillis(); }
 	private static void tock(){endTime=System.currentTimeMillis(); }
+    private static int dungeonSize;
 
     public static void main(String[] args)  {
     	
@@ -40,8 +41,7 @@ public class DungeonHunterParallel {
     	DungeonMapParallel dungeon;  //object to store the dungeon as a grid
     	
         // numSearches is a multiplier used to calculate the total number of searches to perform
-     	int numSearches=10, gateSize= 10;	// gateSize represents the dimensions of the grid
-                                            // the grid is square so if gateSize = 1, then grid is 10x10	
+     	int numSearches=10, gateSize = 10;		
     	HuntParallel [] searches;		// Array of searches
   
     	Random rand = new Random();  //the random number generator
@@ -59,7 +59,7 @@ public class DungeonHunterParallel {
     	    if (gateSize <= 0) {
              throw new IllegalArgumentException("Grid size must be greater than 0.");
             }
-    	
+            dungeonSize = gateSize;
     	    numSearches = (int) (Double.parseDouble(args[1])*(gateSize*2)*(gateSize*2)*DungeonMapParallel.RESOLUTION);
     	
     	    randomSeed=Integer.parseInt( args[2] );
@@ -93,7 +93,6 @@ public class DungeonHunterParallel {
         ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         // Prepare tasks
         SearchResult result = forkJoinPool.invoke(new HuntTask(searches, 0, numSearches));
-        forkJoinPool.shutdown();
 
         int max = result.maxMana;
         int finder = result.finderIndex;
@@ -113,8 +112,8 @@ public class DungeonHunterParallel {
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		dungeon.visualisePowerMap("visualiseSearchParallel.png", false);
-		dungeon.visualisePowerMap("visualiseSearchPathParallel.png", true);
+		//dungeon.visualisePowerMap("visualiseSearchParallel.png", false);
+		//dungeon.visualisePowerMap("visualiseSearchPathParallel.png", true);
     }
 
     /**
@@ -138,7 +137,8 @@ public class DungeonHunterParallel {
      * and the dungeon master's location.
      */
     private static class HuntTask extends RecursiveTask<SearchResult> {
-        private static final int THRESHOLD = 10;    // modify later
+        private static int THRESHOLD = (int)(dungeonSize * 0.1);    
+
         private final HuntParallel[] searches;
         private final int start;
         private final int end;
