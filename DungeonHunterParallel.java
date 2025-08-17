@@ -90,8 +90,9 @@ public class DungeonHunterParallel {
         }
 
     	tick();  //start timer
-        ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
+        
         // Prepare tasks
+        ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
         SearchResult result = forkJoinPool.invoke(new HuntTask(searches, 0, numSearches));
 
         int max = result.maxMana;
@@ -112,8 +113,8 @@ public class DungeonHunterParallel {
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		//dungeon.visualisePowerMap("visualiseSearchParallel.png", false);
-		//dungeon.visualisePowerMap("visualiseSearchPathParallel.png", true);
+		dungeon.visualisePowerMap("visualiseSearchParallel.png", false);
+		dungeon.visualisePowerMap("visualiseSearchPathParallel.png", true);
     }
 
     /**
@@ -137,7 +138,7 @@ public class DungeonHunterParallel {
      * and the dungeon master's location.
      */
     private static class HuntTask extends RecursiveTask<SearchResult> {
-        private static int THRESHOLD = (int)(dungeonSize * 0.1);    
+        private static int THRESHOLD = (int)(dungeonSize * 0.05);    
 
         private final HuntParallel[] searches;
         private final int start;
@@ -151,7 +152,7 @@ public class DungeonHunterParallel {
 
         @Override
         protected SearchResult compute() {
-            if (end - start < THRESHOLD) {
+            if (end - start <= THRESHOLD) {
                 int max = Integer.MIN_VALUE;
                 int finder = -1;
                 for (int i = start; i < end; i++) {
