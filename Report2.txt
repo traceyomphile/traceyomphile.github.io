@@ -1,0 +1,6 @@
+Picture Compare
+Produced: 2025/08/17 12:31:09
+
+Left file: C:\Users\trace\UCT\CSC2002S\Assignments\PCP1\visualiseSearch.png
+Right file: C:\Users\trace\UCT\CSC2002S\Assignments\PCP1\visualiseSearchParallel.png
+4000000 same pixel(s)

@@ -1,0 +1,95 @@
+commit 8bf57002f40495a65a28558854f8adcfe872f8bf
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 17 12:00:15 2025 +0200
+
+    txt files to store the local machine and server specs. Report file created.
+
+commit c7924a90241518f7e273edb0e08eebf72aa6eacf
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 17 11:58:56 2025 +0200
+
+    Removed comments used for testing.
+
+commit 32dc475d866a459cd4f4d9923e97d0376e22b8a5
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Thu Aug 14 16:02:00 2025 +0200
+
+    Adjusted the Threshodl to be 10% of the dungeonSize
+
+commit 3facbfe5f3ce91ee7028ac105e3e6a8195431e14
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 10 13:36:29 2025 +0200
+
+    Added comments
+
+commit 098831b7ebc6ea4974c669e9f505009f00997694
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 10 13:29:45 2025 +0200
+
+    Fixed the bug in DungeonHunterParallel. Removed the inBounds method in DunegoenMapParallel.
+
+commit 779aeb640a8aee8e964d03bc13e18b5ab82f998e
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 10 13:13:50 2025 +0200
+
+    Fixed the error in the switch loop
+
+commit 6308936fac1498333f7dca8f9800725a4af1ea44
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 10 13:06:55 2025 +0200
+
+    Removed the randomPool array, and used one random object to initialise seaches. This was to ensure that resulting pictures of both solution are nearly identical
+
+commit 1ad3c15c83e6e1dbb6c8267439d0d3cd496a6923
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Thu Aug 7 16:26:49 2025 +0200
+
+    #
+
+commit f6c2b0b6763e75402a605f7f18bf9dfd6f8cc112
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Thu Aug 7 16:21:50 2025 +0200
+
+    Used new ForkJoinPool() instead ForkJoinPool.commonPool()
+
+commit 098f24ed1bea1f940b220e7b3a197303f0156d32
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Thu Aug 7 15:23:54 2025 +0200
+
+    Removed the parallel implementation of findManaPeak. Reason being the logic of the method is sequential in nature, and parallelising the method is absolutely unnecessary and can cause overhead problems.
+
+commit 130b87ef20c5d944fc286ccb7543bb84cd606fc6
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Wed Aug 6 22:38:43 2025 +0200
+
+    Added comments to the code.
+
+commit 0442cc943eea6909589368c7060926612ca59dc3
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Wed Aug 6 22:07:22 2025 +0200
+
+    Added a return statement in getDirectionPower method
+
+commit cb28e9a63c03fc40eba102814d79231d284ca61f
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Wed Aug 6 15:50:12 2025 +0200
+
+    Created the HuntParallel class. The class uses most of the Hunt.java code and only parallized the findManaPeak method using the ExecutorService.
+
+commit 24f8edcc64e28ef33c140b2b08d8aeb64fba3f4f
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Wed Aug 6 15:46:56 2025 +0200
+
+    Added the inBounds method to check if the given row and column lie within the dimension of the dungeon grid. The method is used in the HuntParallel class.
+
+commit 04d2c6d93805d91c1a962ccd704e58236e9baf21
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Wed Aug 6 14:56:57 2025 +0200
+
+    Removed the TerrainInitTask class as parallelizing seems more costy due to the overhead of parallelism. Since the Arrays.fill method is already optimized to use low-level CPU instruction to write to memory in bulk, I used it to initialize each row in manaMap and visit to default values.
+
+commit f2d921bc9641d1d5c8da265ea6fe95c7e4953e43
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Tue Aug 5 22:53:20 2025 +0200
+
+    Created the DungeonMapParallel class. Took the serial code from DungeonMap class and only parallelised the Terrain initialization in the constructor, the viualisePowerMap where we mapped the height values to colors, and optimised the get6NextStepDirection by making the arrays static and final to avoid recreation with every method call.
