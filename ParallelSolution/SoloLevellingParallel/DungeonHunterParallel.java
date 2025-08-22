@@ -147,7 +147,7 @@ public class DungeonHunterParallel {
             this.searches = searches;
             this.start = start;
             this.end = end;
-            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 6));
+            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 8));
         }
 
         @Override
