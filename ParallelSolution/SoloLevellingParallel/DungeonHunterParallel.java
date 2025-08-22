@@ -33,7 +33,7 @@ public class DungeonHunterParallel {
 	static long endTime = 0;
 	private static void tick() {startTime = System.currentTimeMillis(); }
 	private static void tock(){endTime=System.currentTimeMillis(); }
-    private static int dungeonSize;
+    private static int hunters;
 
     public static void main(String[] args)  {
     	
@@ -59,7 +59,7 @@ public class DungeonHunterParallel {
     	    if (gateSize <= 0) {
              throw new IllegalArgumentException("Grid size must be greater than 0.");
             }
-            dungeonSize = gateSize;
+            //dungeonSize = gateSize;
     	    numSearches = (int) (Double.parseDouble(args[1])*(gateSize*2)*(gateSize*2)*DungeonMapParallel.RESOLUTION);
     	
     	    randomSeed=Integer.parseInt( args[2] );
@@ -83,6 +83,7 @@ public class DungeonHunterParallel {
     	int dungeonRows=dungeon.getRows();
     	int dungeonColumns=dungeon.getColumns();
      	searches= new HuntParallel[numSearches];
+        hunters = numSearches;
 
         for (int i = 0; i < numSearches; i++) {
             searches[i] = new HuntParallel(i+1, rand.nextInt(dungeonRows),
@@ -138,7 +139,7 @@ public class DungeonHunterParallel {
      * and the dungeon master's location.
      */
     private static class HuntTask extends RecursiveTask<SearchResult> {
-        private static final int THRESHOLD = (int)(dungeonSize * 0.05);    
+        private final int THRESHOLD;    
 
         private final HuntParallel[] searches;
         private final int start;
@@ -148,6 +149,7 @@ public class DungeonHunterParallel {
             this.searches = searches;
             this.start = start;
             this.end = end;
+            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 4));
         }
 
         @Override
