@@ -33,7 +33,6 @@ public class DungeonHunterParallel {
 	static long endTime = 0;
 	private static void tick() {startTime = System.currentTimeMillis(); }
 	private static void tock(){endTime=System.currentTimeMillis(); }
-    private static int hunters;
 
     public static void main(String[] args)  {
     	
@@ -83,7 +82,6 @@ public class DungeonHunterParallel {
     	int dungeonRows=dungeon.getRows();
     	int dungeonColumns=dungeon.getColumns();
      	searches= new HuntParallel[numSearches];
-        hunters = numSearches;
 
         for (int i = 0; i < numSearches; i++) {
             searches[i] = new HuntParallel(i+1, rand.nextInt(dungeonRows),
@@ -114,8 +112,8 @@ public class DungeonHunterParallel {
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		dungeon.visualisePowerMap("visualiseSearch.png", false);
-		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		//dungeon.visualisePowerMap("visualiseSearch.png", false);
+		//dungeon.visualisePowerMap("visualiseSearchPath.png", true);
     }
 
     /**
@@ -149,7 +147,7 @@ public class DungeonHunterParallel {
             this.searches = searches;
             this.start = start;
             this.end = end;
-            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 4));
+            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 6));
         }
 
         @Override
