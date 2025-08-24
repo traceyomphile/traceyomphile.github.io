@@ -266,7 +266,7 @@ public class DungeonMapParallel {
 	 * 
 	 */
 	private class VisualisePowerTask extends RecursiveAction {
-        private static final int THRESHOLD = 50;
+        private static int THRESHOLD;
         private final int startX, endX, min;
         private final BufferedImage image;
         private final double range;
@@ -279,6 +279,7 @@ public class DungeonMapParallel {
             this.min = min;
             this.range = range;
             this.path = path;
+			THRESHOLD = (int)((rows * columns) / (Runtime.getRuntime().availableProcessors() * 6));
         }
 
         @Override
