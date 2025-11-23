@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Machine Specifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 25px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #333;
+            width: 30%; /* Set width for the label column */
+            font-weight: bold;
+        }
+        td {
+            font-family: 'Courier New', Courier, monospace; /* Use monospaced font for values */
+            word-wrap: break-word; /* Ensure long values wrap */
+        }
+        .flags-section td {
+            font-size: 0.9em;
+            white-space: pre-wrap; /* Preserve formatting and wrap */
+            word-break: break-all;
+        }
+        .vulnerability-mitigated {
+            color: orange;
+            font-weight: bold;
+        }
+        .vulnerability-not-affected {
+            color: green;
+        }
+        .vulnerability-unknown {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Local Machine Specifications 💻</h1>
+
+    <div class="specs-section">
+        <h2>General & CPU Details</h2>
+        <table>
+            <tr><th>Architecture</th><td>x86_64 </td></tr>
+            <tr><th>CPU op-mode(s)</th><td>32-bit, 64-bit </td></tr>
+            <tr><th>Address sizes</th><td>39 bits physical, 48 bits virtual</td></tr>
+            <tr><th>Byte Order</th><td>Little Endian </td></tr>
+            <tr><th>CPU(s)</th><td>8 </td></tr>
+            <tr><th>On-line CPU(s) list</th><td>0-7 </td></tr>
+            <tr><th>Vendor ID</th><td>GenuineIntel </td></tr>
+            <tr><th>Model name</th><td>11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz </td></tr>
+            <tr><th>CPU family</th><td>6 </td></tr>
+            <tr><th>Model</th><td>140 </td></tr>
+            <tr><th>Thread(s) per core</th><td>2</td></tr>
+            <tr><th>Core(s) per socket</th><td>4</td></tr>
+            <tr><th>Socket(s)</th><td>1 </td></tr>
+            <tr><th>Stepping</th><td>1 </td></tr>
+            <tr><th>BogoMIPS</th><td>5606.40 </td></tr>
+        </table>
+    </div>
+
+    <div class="cache-section">
+        <h2>Cache Information</h2>
+        <table>
+            <tr><th>L1d cache</th><td>192 KiB (4 instances) </td></tr>
+            <tr><th>L1i cache</th><td>128 KiB (4 instances) </td></tr>
+            <tr><th>L2 cache</th><td>5 MiB (4 instances) </td></tr>
+            <tr><th>L3 cache</th><td>12 MiB (1 instance) </td></tr>
+        </table>
+    </div>
+
+    <div class="virtualization-section">
+        <h2>Virtualization</h2>
+        <table>
+            <tr><th>Virtualization</th><td>VT-x </td></tr>
+            <tr><th>Hypervisor vendor</th><td>Microsoft </td></tr>
+            <tr><th>Virtualization type</th><td>full</td></tr>
+        </table>
+    </div>
+
+    <div class="flags-section">
+        <h2>CPU Flags (Features)</h2>
+        <table>
+            <tr>
+                <th>Flags</th>
+                <td>
+                    fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid pni pclmulqdq vmx ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid movdiri movdir64b fsrm avx512_vp2intersect md_clear flush_l1d arch_capabilities 
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="vulnerability-section">
+        <h2>Vulnerability Status</h2>
+        <table>
+            <tr>
+                <th>Gather data sampling</th>
+                <td class="vulnerability-unknown">Unknown: Dependent on hypervisor status </td>
+            </tr>
+            <tr>
+                <th>Itlb multihit</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>L1tf</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Mds</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Meltdown</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Mmio stale data</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Reg file data sampling</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Retbleed</th>
+                <td class="vulnerability-mitigated">Mitigation; Enhanced IBRS </td>
+            </tr>
+            <tr>
+                <th>Spec rstack overflow</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Spec store bypass</th>
+                <td class="vulnerability-mitigated">Mitigation; Speculative Store Bypass disabled via prctl and seccomp </td>
+            </tr>
+            <tr>
+                <th>Spectre v1</th>
+                <td class="vulnerability-mitigated">Mitigation; usercopy/swapgs barriers and __user pointer sanitization </td>
+            </tr>
+            <tr>
+                <th>Spectre v2</th>
+                <td class="vulnerability-mitigated">Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop </td>
+            </tr>
+            <tr>
+                <th>Srbds</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Tsx async abort</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

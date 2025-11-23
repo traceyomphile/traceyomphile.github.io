@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Specifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #d9534f;
+            border-bottom: 2px solid #d9534f;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 25px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #333;
+            width: 30%;
+            font-weight: bold;
+        }
+        td {
+            font-family: 'Courier New', Courier, monospace;
+            word-wrap: break-word;
+        }
+        .flags-section td {
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .vulnerability-mitigated {
+            color: orange;
+            font-weight: bold;
+        }
+        .vulnerability-not-affected {
+            color: green;
+        }
+        .vulnerability-unknown {
+            color: red;
+        }
+        .vulnerability-vulnerable {
+            color: purple;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Server Specifications ⚙️</h1>
+
+    <div class="specs-section">
+        <h2>General & CPU Details</h2>
+        <table>
+            <tr><th>Architecture</th><td>x86_64 </td></tr>
+            <tr><th>CPU op-mode(s)</th><td>32-bit, 64-bit </td></tr>
+            <tr><th>Address sizes</th><td>40 bits physical, 48 bits virtual </td></tr>
+            <tr><th>Byte Order</th><td>Little Endian </td></tr>
+            <tr><th>CPU(s)</th><td>8 </td></tr>
+            <tr><th>On-line CPU(s) list</th><td>0-7 </td></tr>
+            <tr><th>Vendor ID</th><td>GenuineIntel </td></tr>
+            <tr><th>Model name</th><td>Intel(R) Xeon(R) CPU E5620 @ 2.40GHz </td></tr>
+            <tr><th>CPU family</th><td>6 </td></tr>
+            <tr><th>Model</th><td>44 </td></tr>
+            <tr><th>Thread(s) per core</th><td>2 </td></tr>
+            <tr><th>Core(s) per socket</th><td>4 </td></tr>
+            <tr><th>Socket(s)</th><td>1 </td></tr>
+            <tr><th>Stepping</th><td>2 </td></tr>
+            <tr><th>Frequency boost</th><td>enabled </td></tr>
+            <tr><th>CPU max MHz</th><td>2401.0000 </td></tr>
+            <tr><th>CPU min MHz</th><td>1600.0000 </td></tr>
+            <tr><th>BogoMIPS</th><td>4787.78 </td></tr>
+        </table>
+    </div>
+
+    <div class="cache-section">
+        <h2>Cache & NUMA Information</h2>
+        <table>
+            <tr><th>L1d cache</th><td>128 KiB (4 instances) </td></tr>
+            <tr><th>L1i cache</th><td>128 KiB (4 instances) </td></tr>
+            <tr><th>L2 cache</th><td>1 MiB (4 instances) </td></tr>
+            <tr><th>L3 cache</th><td>12 MiB (1 instance) </td></tr>
+            <tr><th>NUMA node(s)</th><td>1 </td></tr>
+            <tr><th>NUMA node0 CPU(s)</th><td>0-7 </td></tr>
+        </table>
+    </div>
+
+    <div class="virtualization-section">
+        <h2>Virtualization</h2>
+        <table>
+            <tr><th>Virtualization</th><td>VT-x </td></tr>
+        </table>
+    </div>
+
+    <div class="flags-section">
+        <h2>CPU Flags (Features)</h2>
+        <table>
+            <tr>
+                <th>Flags</th>
+                <td>
+                    fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid dca sse4_1 sse4_2 popcnt aes lahf_lm epb pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid dtherm ida arat flush_l1d 
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="vulnerability-section">
+        <h2>Vulnerability Status</h2>
+        <table>
+            <tr>
+                <th>Gather data sampling</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Itlb multihit</th>
+                <td class="vulnerability-mitigated">KVM: Mitigation: VMX disabled </td>
+            </tr>
+            <tr>
+                <th>L1tf</th>
+                <td class="vulnerability-mitigated">Mitigation; PTE Inversion; VMX conditional cache flushes, SMT vulnerable </td>
+            </tr>
+            <tr>
+                <th>Mds</th>
+                <td class="vulnerability-vulnerable">Vulnerable: Clear CPU buffers attempted, no microcode; SMT vulnerable </td>
+            </tr>
+            <tr>
+                <th>Meltdown</th>
+                <td class="vulnerability-mitigated">Mitigation; PTI </td>
+            </tr>
+            <tr>
+                <th>Mmio stale data</th>
+                <td class="vulnerability-unknown">Unknown: No mitigations </td>
+            </tr>
+            <tr>
+                <th>Retbleed</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Spec rstack overflow</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Spec store bypass</th>
+                <td class="vulnerability-mitigated">Mitigation; Speculative Store Bypass disabled via prctl and seccomp </td>
+            </tr>
+            <tr>
+                <th>Spectre v1</th>
+                <td class="vulnerability-mitigated">Mitigation; usercopy/swapgs barriers and __user pointer sanitization </td>
+            </tr>
+            <tr>
+                <th>Spectre v2</th>
+                <td class="vulnerability-mitigated">Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected </td>
+            </tr>
+            <tr>
+                <th>Srbds</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+            <tr>
+                <th>Tsx async abort</th>
+                <td class="vulnerability-not-affected">Not affected </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

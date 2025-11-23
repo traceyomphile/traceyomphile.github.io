@@ -112,8 +112,8 @@ public class DungeonHunterParallel {
 		/* Results*/
 		System.out.printf("Dungeon Master (mana %d) found at:  ", max );
 		System.out.printf("x=%.1f y=%.1f\n\n",dungeon.getXcoord(searches[finder].getPosRow()), dungeon.getYcoord(searches[finder].getPosCol()) );
-		//dungeon.visualisePowerMap("visualiseSearch.png", false);
-		//dungeon.visualisePowerMap("visualiseSearchPath.png", true);
+		dungeon.visualisePowerMap("visualiseSearch.png", false);
+		dungeon.visualisePowerMap("visualiseSearchPath.png", true);
     }
 
     /**
@@ -147,7 +147,7 @@ public class DungeonHunterParallel {
             this.searches = searches;
             this.start = start;
             this.end = end;
-            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 8));
+            THRESHOLD = (int)(searches.length / (Runtime.getRuntime().availableProcessors() * 6));
         }
 
         @Override

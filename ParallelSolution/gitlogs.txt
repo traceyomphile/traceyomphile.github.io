@@ -1,3 +1,69 @@
+commit f04a0a72ba142711f7916dbd2d37156cf06dcee7
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 24 16:36:34 2025 +0200
+
+    Changed the Threshold to be similar to the one for DungeonHunterParallel
+
+commit c002acccded7606e3541e8956625f5337334c19b
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Fri Aug 22 13:49:15 2025 +0200
+
+    Changed the multiplying factor for threshold for testing purposes
+
+commit 32af4aaa47d247b4ecd77af6baada2afb97c221e
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Fri Aug 22 13:35:22 2025 +0200
+
+    Changed multiplying factor of threshold to 6 for testing purposes
+
+commit 9a590afe45689fa06600e3a95dd2d7e455881244
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Fri Aug 22 13:03:34 2025 +0200
+
+    Changed the threshold to give each thread enough task to do
+
+commit 7d2f520bde9e8d902525acb379a0f4a02d4af3a6
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Mon Aug 18 15:14:41 2025 +0200
+
+    Renamed the image files to match the naming conventions in the serial solution
+
+commit d3d7a06f23bc4096872f3aaf2ecb1943b6648acb
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Mon Aug 18 14:50:05 2025 +0200
+
+    Moved some files to separate directories to separate the parallel and serial solution in order to use the makefile for compilation and running.
+
+commit 0cbc3123d765f0ce44806ecc0ce465629c373584
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Mon Aug 18 14:49:12 2025 +0200
+
+    Added a seqCompute() method to allow reuse. Added a check statement to safeguard against infinite recursion
+
+commit a7426571da28a11c7968529a194c877a42ba5bae
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Mon Aug 18 14:16:22 2025 +0200
+
+    Added a seqCompute method so that it can be reused. Added a check statement within the else in the compute method to avoid StackOverFlow.
+
+commit 70c1940e361c93159cc4e435bb5e5dcb123587c1
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 17 22:33:58 2025 +0200
+
+    Added the run-default-and-custom command
+
+commit a64923fad5adf65fd508a590976f3f5b9b31f2a5
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 17 22:27:51 2025 +0200
+
+    Created a Makefile for parallel program
+
+commit d45c1feec942f82e72d13c3c6150764f857749aa
+Author: Tracey <omphiletracey@gmail.com>
+Date:   Sun Aug 17 22:27:29 2025 +0200
+
+    Removed AtomicInteger
+
 commit 8bf57002f40495a65a28558854f8adcfe872f8bf
 Author: Tracey <omphiletracey@gmail.com>
 Date:   Sun Aug 17 12:00:15 2025 +0200
